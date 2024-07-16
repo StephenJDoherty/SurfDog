@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Welcome to SurfDog for all your surfing and beach supplies') }}
         </h2>
     </x-slot>
 
@@ -12,6 +12,7 @@
                     {{ __("You're logged in!") }}
                 </div>
             </div>
+            <img src="{{ asset('images/surfing_dog.jpg') }}" alt="Our Famous Surfing Dog" class="w-full rounded-md">
         </div>
     </div>
 </x-app-layout>

@@ -33,6 +33,9 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('surfshop')" :active="request()->routeIs('surfshop')" wire:navigate>
+                        {{ __('Surf Shop') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('reviews')" :active="request()->routeIs('reviews')" wire:navigate>
                         {{ __('Reviews') }}
                     </x-nav-link>
@@ -86,6 +89,12 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('surfshop')" :active="request()->routeIs('surfshop')" wire:navigate>
+                {{ __('Surf Shop') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('reviews')" :active="request()->routeIs('reviews')" wire:navigate>
+                {{ __('Reviews') }}
             </x-responsive-nav-link>
         </div>
 
