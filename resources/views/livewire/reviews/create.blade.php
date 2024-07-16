@@ -1,0 +1,36 @@
+<?php
+
+use Livewire\Volt\Component;
+
+new class extends Component {
+    // #[Validate('required|string|max:255')]
+    public string $message = '';
+
+    // functioning validation rules
+    protected $rules = [
+        'message' => 'required|string|max:255',
+    ];
+
+    public function store(): void
+    {
+        $validated = $this->validate();
+
+        auth()->user()->reviews()->create($validated);
+
+        $this->message = '';
+
+        $this->dispatch('review-created');
+    }
+}; ?>
+
+<div>
+    <form wire:submit="store">
+        <textarea
+            wire:model="message"
+            placeholder="{{ __('Leave a review') }}"
+            class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+        ></textarea>
+        <x-input-error :messages="$errors->get('message')" class="mt-2" />
+        <x-primary-button class="mt-4">{{ __('Submit') }}</x-primary-button>
+    </form>
+</div>

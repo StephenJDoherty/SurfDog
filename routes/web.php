@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
+
+Route::get('reviews', [ReviewController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('reviews');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
