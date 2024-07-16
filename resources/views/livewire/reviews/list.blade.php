@@ -8,6 +8,8 @@ use Livewire\Volt\Component;
 new class extends Component {
     public Collection $reviews;
 
+    public ?Review $editing = null;
+
     public function mount(): void
     {
         $this->getReviews();
@@ -19,6 +21,31 @@ new class extends Component {
         $this->reviews = Review::with('user')
             ->latest()
             ->get();
+    }
+
+    public function edit(Review $review): void
+    {
+        $this->editing = $review;
+
+        $this->getReviews();
+    }
+
+    #[On('review-edit-canceled')]
+    #[On('review-updated')]
+    public function disableEditing(): void
+    {
+        $this->editing = null;
+
+        $this->getReviews();
+    }
+
+    public function delete(Review $review): void
+    {
+        $this->authorize('delete', $review);
+
+        $review->delete();
+
+        $this->getReviews();
     }
 }; ?>
 
@@ -33,9 +60,35 @@ new class extends Component {
                     <div>
                         <span class="text-gray-800">{{ $review->user->name }}</span>
                         <small class="ml-2 text-sm text-gray-600">{{ $review->created_at->format('j M Y, g:i a') }}</small>
+                        @unless ($review->created_at->eq($review->updated_at))
+                            <small class="text-sm text-gray-600"> &middot; {{ __('edited') }}</small>
+                        @endunless
                     </div>
+                    @if ($review->user->is(auth()->user()))
+                        <x-dropdown>
+                            <x-slot name="trigger">
+                                <button>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                                <x-dropdown-link wire:click="edit({{ $review->id }})">
+                                    {{ __('Edit') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="delete({{ $review->id }})" wire:confirm="Are you sure to delete this review?">
+                                    {{ __('Delete') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+                    @endif
                 </div>
-                <p class="mt-4 text-lg text-gray-900">{{ $review->message }}</p>
+                @if ($review->is($editing))
+                    <livewire:reviews.edit :review="$review" :key="$review->id" />
+                @else
+                    <p class="mt-4 text-lg text-gray-900">{{ $review->message }}</p>
+                @endif
             </div>
         </div>
     @endforeach
